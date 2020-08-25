@@ -11,16 +11,11 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.HashMap;
 import java.util.Map;
 
 public class CreateAccActivity extends AppCompatActivity implements View.OnClickListener {
@@ -28,7 +23,8 @@ public class CreateAccActivity extends AppCompatActivity implements View.OnClick
     private EditText email;
     private EditText password;
     private EditText confirm_password;
-    private static final String URL_CREATE_ACCOUNT = "http://192.168.43.103/class/php/uni/mo/create_account.php";
+    private static final String URL_CREATE_ACCOUNT = "http://192.168.43.52/android/create_account.php";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,12 +54,8 @@ public class CreateAccActivity extends AppCompatActivity implements View.OnClick
                 Toast.makeText(this, "Password dose not match", Toast.LENGTH_SHORT).show();
             }
             else {
-                Toast.makeText(this, "create", Toast.LENGTH_SHORT).show();
-                try {
-                    createAccount(name,email,password);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                createAccount(name,email,password);
+//                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(this,LoginActivity.class);
                 startActivity(i);
             }
@@ -71,24 +63,31 @@ public class CreateAccActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void createAccount(String name,String email, String password) throws JSONException {
-        final JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name",name);
-        jsonObject.put("email",email);
-        jsonObject.put("phone_number","+255765789809");
-        jsonObject.put("password",password);
-        Toast.makeText(this, "crate", Toast.LENGTH_SHORT).show();
-        final StringRequest stringRequest = new StringRequest(Request.Method.GET, URL_CREATE_ACCOUNT, new Response.Listener<String>() {
+    private void createAccount(final String name, final String email, final String password) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_CREATE_ACCOUNT, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(CreateAccActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccActivity.this, "Insertion Success ", Toast.LENGTH_SHORT).show();
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(CreateAccActivity.this, "fail", Toast.LENGTH_SHORT).show();
+                System.out.println("error "+error);
+
+                Toast.makeText(CreateAccActivity.this, "Insertion fail"+error, Toast.LENGTH_SHORT).show();
             }
-        });
+        })
+        {
+            @Override
+            public Map<String, String> getParams()  {
+                Map<String, String> params = new HashMap<>();
+                params.put("full_name", name);
+                params.put("email", email);
+                params.put("password", password);
+                return params;
+            }
+        };
         Volley.newRequestQueue(this).add(stringRequest);
     }
 }

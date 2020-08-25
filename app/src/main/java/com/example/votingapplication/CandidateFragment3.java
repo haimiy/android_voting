@@ -17,7 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-public class CandidateFragment extends Fragment {
+public class CandidateFragment3 extends Fragment {
     Button btn;
     Button btn_result;
     private static final String URL_VOTE = "http://192.168.43.52/android/vote.php";
@@ -25,21 +25,21 @@ public class CandidateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_candidate_activity, container, false);
-        btn = (Button) view.findViewById(R.id.btn_vote1);
-        btn_result = (Button) view.findViewById(R.id.btn_result1);
+        final View view = inflater.inflate(R.layout.fragment_candidate3, container, false);
+        btn = (Button) view.findViewById(R.id.btn_vote3);
+        btn_result = (Button) view.findViewById(R.id.btn_result3);
         btn_result.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ResultActivity.class);
-                intent.putExtra("candidateId",1);
+                intent.putExtra("candidateId",3);
                 startActivity(intent);
             }
         });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, URL_VOTE+"?userId=1&candidateId=1", new Response.Listener<String>() {
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, URL_VOTE+"?userId=1&candidateId=3", new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
